@@ -27,9 +27,29 @@ Blockchain.blocks.push({
 	timestamp: Date.now(),
 });
 
+const createBlock = (data) => {
+	const objData = {
+		index: Blockchain.blocks.length ,
+		prevHash: Blockchain.blocks[Blockchain.blocks.length - 1].hash  ,
+		data,
+		timestamp: Date.now()
+	}
+	const hash = JSON.stringify(objData)
+	objData.hash =blockHash(hash)
+	Blockchain.blocks.push(objData)
+}
+
 // TODO: insert each line into blockchain
-// for (let line of poem) {
-// }
+for (let line of poem) {
+	createBlock(line)
+}
+
+// console.log({Blockchain: JSON.stringify(Blockchain)})
+
+for(let block of Blockchain.blocks){
+	console.log(block)
+}
+
 
 // console.log(`Blockchain is valid: ${verifyChain(Blockchain)}`);
 
@@ -39,5 +59,6 @@ Blockchain.blocks.push({
 function blockHash(bl) {
 	return crypto.createHash("sha256").update(
 		// TODO: use block data to calculate hash
+		`${bl.index};${bl.prevHash};${bl.data};${bl.timestamp}}`
 	).digest("hex");
 }
